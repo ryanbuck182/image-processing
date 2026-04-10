@@ -1,6 +1,16 @@
 use priority_queue::PriorityQueue;
 use crate::shared::{Image, calculate_distance_between_images};
 
+pub fn predict_image_categories(k: usize, images: &Vec<Image>, train_images: &Vec<Image>) -> Vec<u8> {
+    let mut predicted_labels = Vec::with_capacity(images.len());
+    for (i, image) in images.iter().enumerate() {
+        let predicted_label = predict_image_category(k, &image, &train_images);
+        predicted_labels.push(predicted_label);
+        println!("Image {} - Predicted: {}, Actual: {}", i, predicted_label, image.label);
+    }
+    predicted_labels
+}
+
 pub fn predict_image_category(k: usize, image: &Image, train_images: &Vec<Image>) -> u8 {
     let closest_labels = find_closest_images(k, image, &train_images);
 

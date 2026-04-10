@@ -4,10 +4,17 @@ mod parallel_1;
 mod parallel_2;
 
 use shared::{TRAINING_SET_SIZE, load_dataset};
-use sequential::predict_image_category;
+use sequential::{predict_image_category, predict_image_categories};
 
 fn main() {
-    test_sequential(3, 0);
+    // test_sequential(3, 0);
+
+    let (train_images, test_images) = load_dataset();
+    let predicted_labels = predict_image_categories(3, &test_images, &train_images);
+
+    let ( accurate_predictions, accuracy ) = shared::calculate_accuracy(&predicted_labels, &test_images);
+    println!("Accurate Predictions: {}/{}", accurate_predictions, test_images.len());
+    println!("Accuracy: {}", accuracy);
 
     // for i in 0..TRAINING_SET_SIZE {
     //     println!("{:#?}\n", train_images[i].data);
