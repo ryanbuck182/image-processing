@@ -1,4 +1,3 @@
-use priority_queue::PriorityQueue;
 use mnist::{Mnist, MnistBuilder};
 use ndarray::prelude::*;
 
@@ -30,11 +29,11 @@ pub fn calculate_distance_between_images(img1: &Image, img2: &Image) -> u32 {
     distance
 }
 
-pub fn find_closest_images(k: i32, pq: &PriorityQueue) {
+pub fn find_closest_images(k: u32, image: &Image, train_images: Vec<Image>) -> Vec<Image> {
 
 }
 
-pub fn predict_image_category(image: &Image) {
+pub fn predict_image_category(k: u32, image: &Image, train_images: Vec<Image>) -> u8 {
 
 }
 
