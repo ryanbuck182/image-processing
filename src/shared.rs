@@ -2,7 +2,8 @@ use priority_queue::PriorityQueue;
 use ndarray::{prelude::{Array3, Array2, s}};
 
 pub struct Image {
-    name: String,
+    label: String,
+    data: Array2<u8>,
 }
 
 pub fn calculate_distance_between_pixels(px1: u8, px2: u8) -> u8 {
