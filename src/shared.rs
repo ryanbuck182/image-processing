@@ -1,10 +1,10 @@
 use mnist::{Mnist, MnistBuilder};
 use ndarray::prelude::*;
 
-pub const MNIST_TRAINING_IMAGES: &str = "archive/train-images.idx3-ubyte";
-pub const MNIST_TRAINING_LABELS: &str = "archive/train-labels.idx1-ubyte";
-pub const MNIST_TEST_IMAGES: &str = "archive/t10k-images.idx3-ubyte";
-pub const MNIST_TEST_LABELS: &str = "archive/t10k-labels.idx1-ubyte";
+pub const MNIST_TRAINING_IMAGES: &str = "train-images.idx3-ubyte";
+pub const MNIST_TRAINING_LABELS: &str = "train-labels.idx1-ubyte";
+pub const MNIST_TEST_IMAGES: &str = "t10k-images.idx3-ubyte";
+pub const MNIST_TEST_LABELS: &str = "t10k-labels.idx1-ubyte";
 
 pub const TRAINING_SET_SIZE: usize = 60_000;
 pub const TEST_SET_SIZE: usize = 10_000;
