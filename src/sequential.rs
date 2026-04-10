@@ -21,19 +21,19 @@ pub fn predict_image_category(k: usize, image: &Image, train_images: &Vec<Image>
 fn find_closest_images(k: usize, image: &Image, train_images: &Vec<Image>) -> Vec<u8> {
     let mut pq = PriorityQueue::with_capacity(k as usize);
 
-    for train_image in train_images {
+    for (i, train_image) in train_images.iter().enumerate() {
         let distance = calculate_distance_between_images(image, &train_image);
         if pq.len() < k{
-            pq.push(train_image.label, distance);
+            pq.push(i, distance);
         } else if *pq.peek().unwrap().1 > distance {
             pq.pop();
-            pq.push(train_image.label, distance);
+            pq.push(i, distance);
         }
     }
 
     let mut closest_labels = Vec::new();
-    for (label, _) in pq.into_iter() {
-        closest_labels.push(label);
+    for (index, _) in pq.into_iter() {
+        closest_labels.push(train_images[index].label);
     }
     closest_labels
 }
