@@ -1,24 +1,37 @@
+mod shared;
+use shared::{
+    MNIST_TEST_IMAGES, MNIST_TEST_LABELS, MNIST_TRAINING_IMAGES,
+    MNIST_TRAINING_LABELS, TEST_SET_SIZE, TRAINING_SET_SIZE
+};
+
 use mnist::{Mnist, MnistBuilder};
-use ndarray::prelude::{Array3, s};
+use ndarray::prelude::s;
 
 fn main() {
     let Mnist {
         trn_img,
-        // trn_lbl,
-        // tst_img,
-        // tst_lbl,
+        trn_lbl,
+        tst_img,
+        tst_lbl,
         ..
     } = MnistBuilder::new()
-        .training_images_filename("archive/train-images.idx3-ubyte")
-        .training_labels_filename("archive/train-labels.idx1-ubyte")
-        .test_images_filename("archive/t10k-images.idx3-ubyte")
-        .test_labels_filename("archive/t10k-labels.idx1-ubyte")
+        .training_images_filename(MNIST_TRAINING_IMAGES)
+        .training_labels_filename(MNIST_TRAINING_LABELS)
+        .test_images_filename(MNIST_TEST_IMAGES)
+        .test_labels_filename(MNIST_TEST_LABELS)
         .label_format_digit()
-        .training_set_length(50_000)
-        .test_set_length(10_000)
+        .training_set_length(TRAINING_SET_SIZE as u32)
+        .test_set_length(TEST_SET_SIZE as u32)
         .finalize();
+    
+    let train_images = shared::load_training_images(trn_img);
+    let train_labels = trn_lbl;
 
-   let train_data = Array3::from_shape_vec((50_000, 28, 28), trn_img)
-       .expect("Error converting images to Array3 struct");
-   println!("{:#?}\n", train_data.slice(s![0, .., ..]));
+    let test_images = shared::load_test_images(tst_img);
+    let test_labels = tst_lbl;
+
+    for i in 0..TRAINING_SET_SIZE {
+        println!("{:#?}\n", train_images.slice(s![i, .., ..]));
+        println!("Label: {:#?}", train_labels[i]);
+    }
 }
