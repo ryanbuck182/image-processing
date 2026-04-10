@@ -1,5 +1,6 @@
 use mnist::{Mnist, MnistBuilder};
 use ndarray::prelude::*;
+use std::cmp::Ordering;
 
 pub const MNIST_TRAINING_IMAGES: &str = "archive/train-images.idx3-ubyte";
 pub const MNIST_TRAINING_LABELS: &str = "archive/train-labels.idx1-ubyte";
@@ -13,6 +14,31 @@ pub const IMAGE_SIDE_SIZE: usize = 28;
 pub struct Image {
     pub label: u8,
     pub data: Array2<u8>,
+}
+
+pub struct DistanceLabelPair {
+    pub distance: u32,
+    pub label: u8,
+}
+
+impl PartialEq for DistanceLabelPair {
+    fn eq(&self, other: &Self) -> bool {
+        self.distance == other.distance
+    }
+}
+
+impl Eq for DistanceLabelPair {}
+
+impl PartialOrd for DistanceLabelPair {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for DistanceLabelPair {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.distance.cmp(&other.distance)
+    }
 }
 
 pub fn calculate_distance_between_images(img1: &Image, img2: &Image) -> u32 {
