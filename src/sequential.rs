@@ -1,6 +1,5 @@
 use priority_queue::PriorityQueue;
 use crate::shared::{Image, calculate_distance_between_images};
-use std::time::Instant;
 
 pub fn predict_image_categories(k: usize, images: &Vec<Image>, train_images: &Vec<Image>) -> Vec<u8> {
     let mut predicted_labels = Vec::with_capacity(images.len());
