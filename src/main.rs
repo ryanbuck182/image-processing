@@ -19,7 +19,7 @@ fn test_sequential(k: usize, test_img_index: usize) {
     let (train_images, test_images) = load_dataset();
 
     let test_image = &test_images[test_img_index];
-    let result = predict_image_category(k, test_image, train_images);
+    let result = predict_image_category(k, test_image, &train_images);
 
     println!("Predicted: {}", result);
     println!("Actual: {}", test_image.label);
