@@ -1,7 +1,7 @@
 use priority_queue::PriorityQueue;
 use crate::shared::{Image, calculate_distance_between_images};
 
-pub fn predict_image_category(k: u32, image: &Image, train_images: Vec<Image>) -> u8 {
+pub fn predict_image_category(k: usize, image: &Image, train_images: Vec<Image>) -> u8 {
     let closest_labels = find_closest_images(k, image, train_images);
 
     let mut label_counts = [0; 10];
@@ -18,12 +18,14 @@ pub fn predict_image_category(k: u32, image: &Image, train_images: Vec<Image>) -
     predicted_label
 }
 
-fn find_closest_images(k: u32, image: &Image, train_images: Vec<Image>) -> Vec<u8> {
+fn find_closest_images(k: usize, image: &Image, train_images: Vec<Image>) -> Vec<u8> {
     let mut pq = PriorityQueue::with_capacity(k as usize);
 
     for train_image in train_images {
         let distance = calculate_distance_between_images(image, &train_image);
-        if pq.len() < k as usize || *pq.peek().unwrap().1 > distance {
+        if pq.len() < k{
+            pq.push(train_image.label, distance);
+        } else if *pq.peek().unwrap().1 > distance {
             pq.pop();
             pq.push(train_image.label, distance);
         }
