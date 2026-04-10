@@ -19,7 +19,7 @@ pub fn predict_image_category(k: u32, image: &Image, train_images: Vec<Image>) -
 }
 
 fn find_closest_images(k: u32, image: &Image, train_images: Vec<Image>) -> Vec<u8> {
-    let pq = PriorityQueue::with_capacity(k as usize);
+    let mut pq = PriorityQueue::with_capacity(k as usize);
 
     for train_image in train_images {
         let distance = calculate_distance_between_images(image, &train_image);
