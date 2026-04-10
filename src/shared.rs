@@ -19,8 +19,14 @@ pub fn calculate_distance_between_pixels(px1: u8, px2: u8) -> u8 {
     px1.abs_diff(px2)
 }
 
-pub fn calculate_distance_between_images(img1: &Image, img2: &Image) -> u8 {
-
+pub fn calculate_distance_between_images(img1: &Image, img2: &Image) -> u32 {
+    let mut distance: u32 = 0;
+    for i in 0..IMAGE_SIDE_SIZE {
+        for j in 0..IMAGE_SIDE_SIZE {
+            distance += calculate_distance_between_pixels(img1.data[[i, j]], img2.data[[i, j]]) as u32;
+        }
+    }
+    distance
 }
 
 pub fn find_closest_images(k: i32, pq: &PriorityQueue) {
