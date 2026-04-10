@@ -19,7 +19,8 @@ pub fn calculate_distance_between_images(img1: &Image, img2: &Image) -> u32 {
     let mut distance: u32 = 0;
     for i in 0..IMAGE_SIDE_SIZE {
         for j in 0..IMAGE_SIDE_SIZE {
-            distance += calculate_distance_between_pixels(img1.data[[i, j]], img2.data[[i, j]]) as u32;
+            distance +=
+                calculate_distance_between_pixels(img1.data[[i, j]], img2.data[[i, j]]) as u32;
         }
     }
     distance
@@ -53,7 +54,12 @@ fn load_raw_data() -> (Vec<u8>, Vec<u8>, Vec<u8>, Vec<u8>) {
     (trn_img, trn_lbl, tst_img, tst_lbl)
 }
 
-fn parse_data(trn_img: Vec<u8>, trn_lbl: Vec<u8>, tst_img: Vec<u8>, tst_lbl: Vec<u8>) -> (Vec<Image>, Vec<Image>) {
+fn parse_data(
+    trn_img: Vec<u8>,
+    trn_lbl: Vec<u8>,
+    tst_img: Vec<u8>,
+    tst_lbl: Vec<u8>,
+) -> (Vec<Image>, Vec<Image>) {
     let train_images = load_images(trn_img, trn_lbl, TRAINING_SET_SIZE);
     let test_images = load_images(tst_img, tst_lbl, TEST_SET_SIZE);
 
