@@ -29,7 +29,7 @@ fn find_closest_images(k: u32, image: &Image, train_images: Vec<Image>) -> Vec<u
         }
     }
 
-    let closest_labels = Vec::new();
+    let mut closest_labels = Vec::new();
     for (label, _) in pq.into_iter() {
         closest_labels.push(label);
     }
