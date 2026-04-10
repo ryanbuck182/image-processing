@@ -15,10 +15,6 @@ pub struct Image {
     pub data: Array2<u8>,
 }
 
-pub fn calculate_distance_between_pixels(px1: u8, px2: u8) -> u8 {
-    px1.abs_diff(px2)
-}
-
 pub fn calculate_distance_between_images(img1: &Image, img2: &Image) -> u32 {
     let mut distance: u32 = 0;
     for i in 0..IMAGE_SIDE_SIZE {
@@ -27,6 +23,10 @@ pub fn calculate_distance_between_images(img1: &Image, img2: &Image) -> u32 {
         }
     }
     distance
+}
+
+fn calculate_distance_between_pixels(px1: u8, px2: u8) -> u8 {
+    px1.abs_diff(px2)
 }
 
 pub fn load_dataset() -> (Vec<Image>, Vec<Image>) {
