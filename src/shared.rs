@@ -1,5 +1,6 @@
 use priority_queue::PriorityQueue;
-use ndarray::{prelude::{Array3, Array2, s}};
+use mnist::{Mnist, MnistBuilder};
+use ndarray::prelude::*;
 
 pub const MNIST_TRAINING_IMAGES: &str = "archive/train-images.idx3-ubyte";
 pub const MNIST_TRAINING_LABELS: &str = "archive/train-labels.idx1-ubyte";
@@ -11,8 +12,8 @@ pub const TEST_SET_SIZE: usize = 10_000;
 pub const IMAGE_SIDE_SIZE: usize = 28;
 
 pub struct Image {
-    label: String,
-    data: Array2<u8>,
+    pub label: u8,
+    pub data: Array2<u8>,
 }
 
 pub fn calculate_distance_between_pixels(px1: u8, px2: u8) -> u8 {
@@ -37,12 +38,47 @@ pub fn predict_image_category(image: &Image) {
 
 }
 
-pub fn load_training_images(data: Vec<u8>) -> Array3<u8> {
-    Array3::from_shape_vec((TRAINING_SET_SIZE, IMAGE_SIDE_SIZE, IMAGE_SIDE_SIZE), data)
-        .expect("Error converting images to Array3 struct")
+pub fn load_dataset() -> (Vec<Image>, Vec<Image>) {
+    let (trn_img, trn_lbl, tst_img, tst_lbl) = load_raw_data();
+    parse_data(trn_img, trn_lbl, tst_img, tst_lbl)
 }
 
-pub fn load_test_images(data: Vec<u8>) -> Array3<u8> {
-    Array3::from_shape_vec((TEST_SET_SIZE, IMAGE_SIDE_SIZE, IMAGE_SIDE_SIZE), data)
-        .expect("Error converting images to Array3 struct")
+fn load_raw_data() -> (Vec<u8>, Vec<u8>, Vec<u8>, Vec<u8>) {
+    let Mnist {
+        trn_img,
+        trn_lbl,
+        tst_img,
+        tst_lbl,
+        ..
+    } = MnistBuilder::new()
+        .training_images_filename(MNIST_TRAINING_IMAGES)
+        .training_labels_filename(MNIST_TRAINING_LABELS)
+        .test_images_filename(MNIST_TEST_IMAGES)
+        .test_labels_filename(MNIST_TEST_LABELS)
+        .label_format_digit()
+        .training_set_length(TRAINING_SET_SIZE as u32)
+        .test_set_length(TEST_SET_SIZE as u32)
+        .finalize();
+    (trn_img, trn_lbl, tst_img, tst_lbl)
+}
+
+fn parse_data(trn_img: Vec<u8>, trn_lbl: Vec<u8>, tst_img: Vec<u8>, tst_lbl: Vec<u8>) -> (Vec<Image>, Vec<Image>) {
+    let train_images = load_images(trn_img, trn_lbl, TRAINING_SET_SIZE);
+    let test_images = load_images(tst_img, tst_lbl, TEST_SET_SIZE);
+
+    (train_images, test_images)
+}
+
+fn load_images(imgs: Vec<u8>, labels: Vec<u8>, set_size: usize) -> Vec<Image> {
+    let array3d = Array3::from_shape_vec((set_size, IMAGE_SIDE_SIZE, IMAGE_SIDE_SIZE), imgs)
+        .expect("Error converting images to Array3 struct");
+
+    let mut images: Vec<Image> = Vec::new();
+    for i in 0..set_size {
+        images.push(Image {
+            label: labels[i],
+            data: array3d.index_axis(Axis(0), i).to_owned(),
+        });
+    }
+    images
 }
