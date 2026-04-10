@@ -1,5 +1,5 @@
 use priority_queue::PriorityQueue;
-use shared::{Image, calculate_distance_between_images};
+use crate::shared::{Image, calculate_distance_between_images};
 
 pub fn predict_image_category(k: u32, image: &Image, train_images: Vec<Image>) -> u8 {
     let closest_labels = find_closest_images(k, image, train_images);

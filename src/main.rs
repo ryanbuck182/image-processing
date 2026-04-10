@@ -1,4 +1,8 @@
 mod shared;
+mod sequential;
+mod parallel_1;
+mod parallel_2;
+
 use shared::{TRAINING_SET_SIZE, load_dataset};
 
 fn main() {
