@@ -15,6 +15,16 @@ pub struct Image {
     pub data: Array2<u8>,
 }
 
+pub fn calculate_accuracy(predicted_labels: &Vec<u8>, test_images: &Vec<Image>) -> (usize, f64) {
+    let actual_labels: Vec<u8> = test_images.iter().map(|img| img.label).collect();
+
+    let actual_predicted_iter = predicted_labels.iter().zip(actual_labels.iter());
+    let accurate_predictions = actual_predicted_iter.filter(|(predicted, actual)| predicted == actual).count();
+    let accuracy = accurate_predictions as f64 / predicted_labels.len() as f64;
+
+    ( accurate_predictions, accuracy )
+}
+
 pub fn calculate_distance_between_images(img1: &Image, img2: &Image) -> u32 {
     let mut distance: u32 = 0;
     for i in 0..IMAGE_SIDE_SIZE {
