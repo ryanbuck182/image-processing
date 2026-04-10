@@ -5,8 +5,8 @@ struct Image {
     name: String,
 }
 
-fn calculate_distance_between_pixels(px1: i8, px2: i8) {
-    return (px1 - px2).abs();
+pub fn calculate_distance_between_pixels(px1: u8, px2: u8) -> u8 {
+    px1.abs_diff(px2)
 }
 
 fn calculate_distance_between_images(img1: &Image, img2: &Image) -> i8 {
