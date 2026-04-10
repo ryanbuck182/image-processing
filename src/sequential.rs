@@ -1,13 +1,17 @@
 use priority_queue::PriorityQueue;
 use crate::shared::{Image, calculate_distance_between_images};
+use std::time::Instant;
 
 pub fn predict_image_categories(k: usize, images: &Vec<Image>, train_images: &Vec<Image>) -> Vec<u8> {
     let mut predicted_labels = Vec::with_capacity(images.len());
+    let start_time = Instant::now();
     for (i, image) in images.iter().enumerate() {
         let predicted_label = predict_image_category(k, &image, &train_images);
         predicted_labels.push(predicted_label);
         println!("Image {} - Predicted: {}, Actual: {}", i, predicted_label, image.label);
     }
+    let duration = start_time.elapsed();
+    println!("Total prediction time: {:?}", duration);
     predicted_labels
 }
 
