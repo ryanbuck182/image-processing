@@ -29,14 +29,6 @@ pub fn calculate_distance_between_images(img1: &Image, img2: &Image) -> u32 {
     distance
 }
 
-pub fn find_closest_images(k: u32, image: &Image, train_images: Vec<Image>) -> Vec<Image> {
-
-}
-
-pub fn predict_image_category(k: u32, image: &Image, train_images: Vec<Image>) -> u8 {
-
-}
-
 pub fn load_dataset() -> (Vec<Image>, Vec<Image>) {
     let (trn_img, trn_lbl, tst_img, tst_lbl) = load_raw_data();
     parse_data(trn_img, trn_lbl, tst_img, tst_lbl)
