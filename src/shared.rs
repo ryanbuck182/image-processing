@@ -10,6 +10,7 @@ pub const TRAINING_SET_SIZE: usize = 60_000;
 pub const TEST_SET_SIZE: usize = 10_000;
 pub const IMAGE_SIDE_SIZE: usize = 28;
 
+#[derive(Clone)]
 pub struct Image {
     pub label: u8,
     pub data: Array2<u8>,
