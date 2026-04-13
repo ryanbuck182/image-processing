@@ -7,6 +7,7 @@ use shared::{load_dataset};
 use sequential::{predict_image_categories};
 use parallel_1::{predict_image_categories_parallel};
 use std::time::Instant;
+use num_cpus;
 
 fn main() {
     // test_sequential(3, 0);
@@ -47,6 +48,10 @@ fn full_test(k: usize) {
     let predicted_labels_parallel = predict_image_categories_parallel(k, &test_images, &train_images);
     let duration_parallel = start_time_parallel.elapsed();
 
+    let speedup = duration_sequential.as_secs_f64() / duration_parallel.as_secs_f64();
+    let efficiency = speedup as f64 / num_cpus::get() as f64;
+    let sequential_throughput = test_images.len() as f64 / duration_sequential.as_secs_f64();
+    let parallel_throughput = test_images.len() as f64 / duration_parallel.as_secs_f64();
 
     let ( accurate_predictions_sequential, accuracy_sequential ) = shared::calculate_accuracy(&predicted_labels_sequential, &test_images);
     let ( accurate_predictions_parallel, accuracy_parallel ) = shared::calculate_accuracy(&predicted_labels_parallel, &test_images);
@@ -56,4 +61,9 @@ fn full_test(k: usize) {
     println!("Accuracy Parallel: {}", accuracy_parallel);
     println!("Time Sequential: {:?}", duration_sequential);
     println!("Time Parallel: {:?}", duration_parallel);
+
+    println!("Speedup: {:.2}", speedup);
+    println!("Efficiency: {:.2}", efficiency);
+    println!("Sequential Throughput: {:.2} images/sec", sequential_throughput);
+    println!("Parallel Throughput: {:.2} images/sec", parallel_throughput);
 }
