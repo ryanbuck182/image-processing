@@ -3,9 +3,9 @@ mod sequential;
 mod parallel_1;
 mod parallel_2;
 
-use shared::{TRAINING_SET_SIZE, load_dataset};
-use sequential::{predict_image_category, predict_image_categories};
-use parallel_1::{predict_image_category_parallel, predict_image_categories_parallel};
+use shared::{load_dataset};
+use sequential::{predict_image_categories};
+use parallel_1::{predict_image_categories_parallel};
 use std::time::Instant;
 
 fn main() {
@@ -25,16 +25,16 @@ fn main() {
     full_test(3);
 }
 
-fn test_sequential(k: usize, test_img_index: usize) {
-    let (train_images, test_images) = load_dataset();
+// fn test_sequential(k: usize, test_img_index: usize) {
+//     let (train_images, test_images) = load_dataset();
 
-    let test_image = &test_images[test_img_index];
-    let result = predict_image_category(k, test_image, &train_images);
+//     let test_image = &test_images[test_img_index];
+//     let result = predict_image_category(k, test_image, &train_images);
 
-    println!("Predicted: {}", result);
-    println!("Actual: {}", test_image.label);
-    println!("{:#?}\n", test_image.data);
-}
+//     println!("Predicted: {}", result);
+//     println!("Actual: {}", test_image.label);
+//     println!("{:#?}\n", test_image.data);
+// }
 
 fn full_test(k: usize) {
     let (train_images, test_images) = load_dataset();
