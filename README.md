@@ -50,4 +50,5 @@ The dependencies in [`Cargo.toml`](./Cargo.toml) should be automatically install
 
 ## 5. References
 
-No references.
+Geeks for Geeks: k-Nearest Neighbors (KNN) Algorithm
+https://www.geeksforgeeks.org/machine-learning/k-nearest-neighbours/
