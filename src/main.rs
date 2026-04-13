@@ -49,9 +49,10 @@ fn full_test(k: usize) {
     // let predicted_labels_parallel = predict_image_categories_parallel(k, &test_images, &train_images);
     // let duration_parallel = start_time_parallel.elapsed();
 
+    let start_time_parallel_2 = Instant::now();
     let predicted_labels_parallel_2 = predict_image_categories_parallel_2(k, &test_images, &train_images);
-
-    // let speedup = duration_sequential.as_secs_f64() / duration_parallel.as_secs_f64();
+    let duration_parallel_2= start_time_parallel_2.elapsed();
+    // let speedup = duration_sequential.as_secs_f64() / duration_parallel.as_secs_f64();   
     // let efficiency = speedup as f64 / num_cpus::get() as f64;
     // let sequential_throughput = test_images.len() as f64 / duration_sequential.as_secs_f64();
     // let parallel_throughput = test_images.len() as f64 / duration_parallel.as_secs_f64();
@@ -64,7 +65,7 @@ fn full_test(k: usize) {
     // println!("Accuracy Sequential: {}", accuracy_sequential);
     // println!("Accuracy Parallel: {}", accuracy_parallel);
     // println!("Time Sequential: {:?}", duration_sequential);
-    // println!("Time Parallel: {:?}", duration_parallel);
+    println!("Time Parallel: {:?}", duration_parallel_2);
 
     // println!("Speedup: {:.2}", speedup);
     // println!("Efficiency: {:.2}", efficiency);

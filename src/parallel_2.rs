@@ -2,7 +2,7 @@ use priority_queue::PriorityQueue;
 use crate::shared::{Image, calculate_distance_between_images, predict_image_category};
 use threadpool::ThreadPool;
 use num_cpus;
-use std::sync::mpsc::channel;
+use std::sync::{mpsc::channel, Arc};
 
 pub fn predict_image_categories_parallel_2(k: usize, images: &Vec<Image>, train_images: &Vec<Image>) -> Vec<u8> {
     let mut predicted_labels = Vec::with_capacity(images.len());
@@ -18,24 +18,39 @@ fn find_closest_images_parallel_2(k: usize, image: &Image, train_images: &Vec<Im
     let mut pq = PriorityQueue::with_capacity(k as usize);
 
     let n_workers = num_cpus::get();
-    let n_jobs = train_images.len();
+    let chunk_size = (train_images.len() + n_workers - 1) / n_workers;
+    
     let pool = ThreadPool::new(n_workers);
 
+    let image = Arc::new(image.clone());
+
     let (tx, rx) = channel();
-    for i in 0..n_jobs {
+
+    for (chunk_idx, chunk) in train_images.chunks(chunk_size).enumerate() {
         let tx = tx.clone();
-        let j = i.clone();
-        let image_clone = image.clone();
-        let training_image = train_images[i].clone();
+        let image_ref = Arc::clone(&image);
+        let start_idx = chunk_idx * chunk_size;
+        let chunk = chunk.to_vec();
+        
         pool.execute(move || {
-            let distance = calculate_distance_between_images(&image_clone, &training_image);
-            tx.send((j, distance)).expect("channel will be there waiting for the pool");
+            let mut loacl_results = Vec::with_capacity(chunk.len());
+
+            for (i,training_image) in chunk.iter().enumerate() {
+                let distance = calculate_distance_between_images(&image_ref, training_image);
+                loacl_results.push((start_idx + i, distance));
+            }
+            tx.send(loacl_results).unwrap();
         });
     }
+    
+    drop(tx);
 
-    let results: Vec<(usize, u32)> = rx.iter().take(n_jobs).collect();
+    let mut all_results = Vec::with_capacity(train_images.len());
+    for chunk in rx {
+        all_results.extend(chunk);
+    }
 
-    for (i, distance) in results {
+    for (i, distance) in all_results {
         pq.push(i, distance);
         if pq.len() > k {
             pq.pop();
@@ -46,5 +61,6 @@ fn find_closest_images_parallel_2(k: usize, image: &Image, train_images: &Vec<Im
     for (index, _) in pq.into_iter() {
         closest_labels.push(train_images[index].label);
     }
+
     closest_labels
 }
