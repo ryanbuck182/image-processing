@@ -40,6 +40,23 @@ fn calculate_distance_between_pixels(px1: u8, px2: u8) -> u8 {
     px1.abs_diff(px2)
 }
 
+pub fn predict_image_category(k: usize, image: &Image, train_images: &Vec<Image>, find_closest_images: fn(usize, &Image, &Vec<Image>) -> Vec<u8>) -> u8 {
+    let closest_labels = find_closest_images(k, image, &train_images);
+
+    let mut label_counts = [0; 10];
+    for label in closest_labels {
+        label_counts[label as usize] += 1;
+    }
+
+    let mut predicted_label = 0;
+    for (label, count) in label_counts.iter().enumerate() {
+        if *count > label_counts[predicted_label as usize] {
+            predicted_label = label as u8;
+        }
+    }
+    predicted_label
+}
+
 pub fn load_dataset() -> (Vec<Image>, Vec<Image>) {
     let (trn_img, trn_lbl, tst_img, tst_lbl) = load_raw_data();
     parse_data(trn_img, trn_lbl, tst_img, tst_lbl)
