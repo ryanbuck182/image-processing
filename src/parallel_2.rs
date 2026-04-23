@@ -11,7 +11,7 @@ pub fn predict_image_categories_parallel_2(k: usize, images: &Vec<Image>, train_
     for (i, image) in images.iter().enumerate() {
         let predicted_label = predict_image_category_parallel_2(k, &image, &train_images, &pool);
         predicted_labels.push(predicted_label);
-        println!("Image {} - Predicted: {}, Actual: {}", i, predicted_label, image.label);
+        // println!("Image {} - Predicted: {}, Actual: {}", i, predicted_label, image.label);
     }
     predicted_labels
 }

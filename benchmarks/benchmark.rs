@@ -63,6 +63,7 @@ pub fn benchmark(k: usize, predict: PredictFn) -> BenchmarkResults {
     let (train_images, test_images) = load_dataset();
 
     let start_time = Instant::now();
+    println!("Predicting...");
     let predicted_labels = predict(k, &test_images, &train_images);
     let duration = start_time.elapsed();
 

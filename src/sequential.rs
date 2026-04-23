@@ -6,7 +6,7 @@ pub fn predict_image_categories(k: usize, images: &Vec<Image>, train_images: &Ve
     for (i, image) in images.iter().enumerate() {
         let predicted_label = predict_image_category(k, &image, &train_images, find_closest_images);
         predicted_labels.push(predicted_label);
-        println!("Image {} - Predicted: {}, Actual: {}", i, predicted_label, image.label);
+        // println!("Image {} - Predicted: {}, Actual: {}", i, predicted_label, image.label);
     }
     predicted_labels
 }

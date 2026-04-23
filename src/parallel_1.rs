@@ -10,7 +10,7 @@ pub fn predict_image_categories_parallel(k: usize, images: &Vec<Image>, train_im
     for (i, image) in images.iter().enumerate() {
         let predicted_label = predict_image_category(k, &image, &train_images, find_closest_images_parallel);
         predicted_labels.push(predicted_label);
-        println!("Image {} - Predicted: {}, Actual: {}", i, predicted_label, image.label);
+        // println!("Image {} - Predicted: {}, Actual: {}", i, predicted_label, image.label);
         accuracy_per_image.push((image.label, predicted_label));
     }
     
