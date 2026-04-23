@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use priority_queue::PriorityQueue;
 use crate::shared::{Image, calculate_distance_between_images, predict_image_category};
 use rayon::prelude::*;
