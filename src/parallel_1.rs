@@ -1,19 +1,23 @@
-use priority_queue::PriorityQueue;
 use crate::shared::{Image, calculate_distance_between_images, predict_image_category};
+use priority_queue::PriorityQueue;
 use rayon::prelude::*;
 
-
-pub fn predict_image_categories_parallel(k: usize, images: &Vec<Image>, train_images: &Vec<Image>) -> Vec<u8> {
+pub fn predict_image_categories_parallel(
+    k: usize,
+    images: &Vec<Image>,
+    train_images: &Vec<Image>,
+) -> Vec<u8> {
     let mut predicted_labels = Vec::with_capacity(images.len());
     let mut accuracy_per_image: Vec<(u8, u8)> = Vec::new();
-    
+
     for image in images {
-        let predicted_label = predict_image_category(k, &image, &train_images, find_closest_images_parallel);
+        let predicted_label =
+            predict_image_category(k, &image, &train_images, find_closest_images_parallel);
         predicted_labels.push(predicted_label);
         // println!("Image {} - Predicted: {}, Actual: {}", i, predicted_label, image.label);
         accuracy_per_image.push((image.label, predicted_label));
     }
-    
+
     predicted_labels
 }
 

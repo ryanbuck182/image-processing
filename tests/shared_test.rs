@@ -1,6 +1,6 @@
 use image_processing::shared::{
-    calculate_accuracy, calculate_distance_between_images, predict_image_category, Image,
-    IMAGE_SIDE_SIZE,
+    IMAGE_SIDE_SIZE, Image, calculate_accuracy, calculate_distance_between_images,
+    predict_image_category,
 };
 use ndarray::Array2;
 
@@ -44,8 +44,14 @@ fn distance_on_varied_pixels() {
     b_data[[0, 0]] = 40;
     a_data[[5, 7]] = 10;
     b_data[[5, 7]] = 25;
-    let a = Image { label: 0, data: a_data };
-    let b = Image { label: 0, data: b_data };
+    let a = Image {
+        label: 0,
+        data: a_data,
+    };
+    let b = Image {
+        label: 0,
+        data: b_data,
+    };
     assert_eq!(calculate_distance_between_images(&a, &b), 60 + 15);
 }
 

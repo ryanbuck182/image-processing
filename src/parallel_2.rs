@@ -1,10 +1,14 @@
-use priority_queue::PriorityQueue;
 use crate::shared::{Image, calculate_distance_between_images};
-use threadpool::ThreadPool;
 use num_cpus;
-use std::sync::{mpsc::channel, Arc};
+use priority_queue::PriorityQueue;
+use std::sync::{Arc, mpsc::channel};
+use threadpool::ThreadPool;
 
-pub fn predict_image_categories_parallel_2(k: usize, images: &Vec<Image>, train_images: &Vec<Image>) -> Vec<u8> {
+pub fn predict_image_categories_parallel_2(
+    k: usize,
+    images: &Vec<Image>,
+    train_images: &Vec<Image>,
+) -> Vec<u8> {
     let mut predicted_labels = Vec::with_capacity(images.len());
     let n_workers = num_cpus::get();
     let pool = ThreadPool::new(n_workers);
@@ -16,7 +20,12 @@ pub fn predict_image_categories_parallel_2(k: usize, images: &Vec<Image>, train_
     predicted_labels
 }
 
-fn predict_image_category_parallel_2(k: usize, image: &Image, train_images: &Vec<Image>, pool: &ThreadPool) -> u8 {
+fn predict_image_category_parallel_2(
+    k: usize,
+    image: &Image,
+    train_images: &Vec<Image>,
+    pool: &ThreadPool,
+) -> u8 {
     let closest_labels = find_closest_images_parallel_2(k, image, &train_images, pool);
 
     let mut label_counts = [0; 10];
@@ -33,13 +42,17 @@ fn predict_image_category_parallel_2(k: usize, image: &Image, train_images: &Vec
     predicted_label
 }
 
-fn find_closest_images_parallel_2(k: usize, image: &Image, train_images: &Vec<Image>, pool: &ThreadPool) -> Vec<u8> {
+fn find_closest_images_parallel_2(
+    k: usize,
+    image: &Image,
+    train_images: &Vec<Image>,
+    pool: &ThreadPool,
+) -> Vec<u8> {
     let mut pq = PriorityQueue::with_capacity(k as usize);
 
     let n_workers = num_cpus::get();
     let chunk_size = (train_images.len() + n_workers - 1) / n_workers;
 
-    
     let image = Arc::new(image.clone());
 
     let (tx, rx) = channel();
@@ -49,18 +62,18 @@ fn find_closest_images_parallel_2(k: usize, image: &Image, train_images: &Vec<Im
         let image_ref = Arc::clone(&image);
         let start_idx = chunk_idx * chunk_size;
         let chunk = chunk.to_vec();
-        
+
         pool.execute(move || {
             let mut local_results = Vec::with_capacity(chunk.len());
 
-            for (i,training_image) in chunk.iter().enumerate() {
+            for (i, training_image) in chunk.iter().enumerate() {
                 let distance = calculate_distance_between_images(&image_ref, training_image);
                 local_results.push((start_idx + i, distance));
             }
             tx.send(local_results).unwrap();
         });
     }
-    
+
     drop(tx);
 
     let mut all_results = Vec::with_capacity(train_images.len());

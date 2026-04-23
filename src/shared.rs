@@ -20,10 +20,12 @@ pub fn calculate_accuracy(predicted_labels: &Vec<u8>, test_images: &Vec<Image>) 
     let actual_labels: Vec<u8> = test_images.iter().map(|img| img.label).collect();
 
     let actual_predicted_iter = predicted_labels.iter().zip(actual_labels.iter());
-    let accurate_predictions = actual_predicted_iter.filter(|(predicted, actual)| predicted == actual).count();
+    let accurate_predictions = actual_predicted_iter
+        .filter(|(predicted, actual)| predicted == actual)
+        .count();
     let accuracy = accurate_predictions as f64 / predicted_labels.len() as f64;
 
-    ( accurate_predictions, accuracy )
+    (accurate_predictions, accuracy)
 }
 
 pub fn calculate_distance_between_images(img1: &Image, img2: &Image) -> u32 {
@@ -41,7 +43,12 @@ fn calculate_distance_between_pixels(px1: u8, px2: u8) -> u8 {
     px1.abs_diff(px2)
 }
 
-pub fn predict_image_category(k: usize, image: &Image, train_images: &Vec<Image>, find_closest_images: fn(usize, &Image, &Vec<Image>) -> Vec<u8>) -> u8 {
+pub fn predict_image_category(
+    k: usize,
+    image: &Image,
+    train_images: &Vec<Image>,
+    find_closest_images: fn(usize, &Image, &Vec<Image>) -> Vec<u8>,
+) -> u8 {
     let closest_labels = find_closest_images(k, image, &train_images);
 
     let mut label_counts = [0; 10];
