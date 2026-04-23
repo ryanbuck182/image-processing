@@ -42,7 +42,7 @@ fn benchmark_menu() {
 
 fn input_int(prompt: &str, min: i32, max: i32) -> i32 {
     let input = take_input(prompt);
-    
+
     // Parse input
     let num: Result<i32, _> = input.parse();
 
@@ -52,7 +52,10 @@ fn input_int(prompt: &str, min: i32, max: i32) -> i32 {
             if n >= min && n <= max {
                 n
             } else {
-                println!("Invalid input! Please enter an integer between {} and {}.", min, max);
+                println!(
+                    "Invalid input! Please enter an integer between {} and {}.",
+                    min, max
+                );
                 input_int(prompt, min, max)
             }
         }
