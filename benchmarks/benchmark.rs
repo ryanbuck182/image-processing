@@ -13,9 +13,9 @@ type BenchmarkResults = (Duration, usize, f64, [u32; 10], [u32; 10]);
 const NUM_TEST_IMAGES: u32 = 10000;
 
 pub fn full_benchmark(k: usize) {
-    let (duration_sequential, accurate_predictions, accuracy, correct_counts, total_counts) = sequential_benchmark(k);
-    let (duration_parallel, _, _, _, _) = parallel_benchmark(k);
-    let (duration_parallel_2, _, _, _, _) = parallel_2_benchmark(k);
+    let (duration_sequential, accurate_predictions, accuracy, correct_counts, total_counts) = run_sequential_benchmark(k);
+    let (duration_parallel, _, _, _, _) = run_parallel_benchmark(k);
+    let (duration_parallel_2, _, _, _, _) = run_parallel_2_benchmark(k);
 
     // parallel speedup
     let speedup = duration_sequential.as_secs_f64() / duration_parallel.as_secs_f64();   
@@ -59,7 +59,47 @@ pub fn full_benchmark(k: usize) {
     }
 }
 
-pub fn benchmark(k: usize, predict: PredictFn) -> BenchmarkResults {
+pub fn sequential_benchmark(k: usize) {
+    let (duration, accurate_predictions, accuracy, correct_counts, total_counts) = run_sequential_benchmark(k);
+
+    println!("Sequential");
+    println!("Accurate Predictions: {}/{}", accurate_predictions, NUM_TEST_IMAGES);
+    println!("Accuracy: {}", accuracy);
+    println!("Time: {:?}", duration);
+    print_accuracy_per_label(correct_counts, total_counts);
+}
+
+pub fn parallel_benchmark(k: usize) {
+    let (duration, accurate_predictions, accuracy, correct_counts, total_counts) = run_parallel_benchmark(k);
+
+    println!("Parallel 1");
+    println!("Accurate Predictions: {}/{}", accurate_predictions, NUM_TEST_IMAGES);
+    println!("Accuracy: {}", accuracy);
+    println!("Time: {:?}", duration);
+    print_accuracy_per_label(correct_counts, total_counts);
+}
+
+pub fn parallel_2_benchmark(k: usize) {
+    let (duration, accurate_predictions, accuracy, correct_counts, total_counts) = run_parallel_2_benchmark(k);
+
+    println!("Parallel 2");
+    println!("Accurate Predictions: {}/{}", accurate_predictions, NUM_TEST_IMAGES);
+    println!("Accuracy: {}", accuracy);
+    println!("Time: {:?}", duration);
+    print_accuracy_per_label(correct_counts, total_counts);
+}
+
+fn print_accuracy_per_label(correct_counts: [u32; 10], total_counts: [u32; 10]) {
+    println!("\nAccuracy per label:");
+    for label in 0..10 {
+        let total = total_counts[label];
+        let correct = correct_counts[label];
+        let pct = if total > 0 { correct as f64 / total as f64 * 100.0 } else { 0.0 };
+        println!("  Label {}: {}/{} ({:.1}%)", label, correct, total, pct);
+    }
+}
+
+fn benchmark(k: usize, predict: PredictFn) -> BenchmarkResults {
     let (train_images, test_images) = load_dataset();
 
     let start_time = Instant::now();
@@ -73,15 +113,15 @@ pub fn benchmark(k: usize, predict: PredictFn) -> BenchmarkResults {
     return (duration, accurate_predictions, accuracy, correct_counts, total_counts)
 }
 
-pub fn sequential_benchmark(k: usize) -> BenchmarkResults {
+fn run_sequential_benchmark(k: usize) -> BenchmarkResults {
     return benchmark(k, predict_image_categories)
 }
 
-pub fn parallel_benchmark(k: usize) -> BenchmarkResults {
+fn run_parallel_benchmark(k: usize) -> BenchmarkResults {
     return benchmark(k, predict_image_categories_parallel)
 }
 
-pub fn parallel_2_benchmark(k: usize) -> BenchmarkResults {
+fn run_parallel_2_benchmark(k: usize) -> BenchmarkResults {
     return benchmark(k, predict_image_categories_parallel_2)
 }
 
