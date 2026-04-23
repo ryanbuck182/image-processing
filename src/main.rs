@@ -1,4 +1,5 @@
 use image_processing::benchmark::{full_benchmark, parallel_benchmark, sequential_benchmark, parallel_2_benchmark};
+const K_VALUE: usize = 3;
 
 fn main() {
     benchmark_menu();
@@ -18,20 +19,16 @@ fn benchmark_menu() {
         let choice = choice.trim().parse::<u32>().expect("Invalid input");
             match choice {
                 1 => {
-                    full_benchmark(3);
-                    break;
+                    full_benchmark(K_VALUE);
                 }
                 2 => {
-                    sequential_benchmark(3);
-                    break;
+                    sequential_benchmark(K_VALUE);
                 }
                 3 => {
-                    parallel_benchmark(3);
-                    break;
+                    parallel_benchmark(K_VALUE);
                 }
                 4 => {
-                    parallel_2_benchmark(3);
-                    break;
+                    parallel_2_benchmark(K_VALUE);
                 }
                 5 => break,
                 _ => println!("Invalid choice"),
