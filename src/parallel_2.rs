@@ -19,9 +19,8 @@ fn find_closest_images_parallel_2(k: usize, image: &Image, train_images: &Vec<Im
 
     let n_workers = num_cpus::get();
     let chunk_size = (train_images.len() + n_workers - 1) / n_workers;
-    
-    let pool = ThreadPool::new(n_workers);
 
+    let pool = ThreadPool::new(n_workers);
     let image = Arc::new(image.clone());
 
     let (tx, rx) = channel();
