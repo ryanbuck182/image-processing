@@ -3,7 +3,9 @@ use crate::parallel_2::predict_image_categories_parallel_2;
 use crate::sequential::predict_image_categories;
 use crate::shared::Image;
 use crate::shared::{self, load_dataset};
+use ndarray::range;
 use num_cpus;
+use std::thread::AccessError;
 use std::time::Duration;
 use std::time::Instant;
 
@@ -70,6 +72,13 @@ pub fn full_benchmark(k: usize) {
             0.0
         };
         println!("  Label {}: {}/{} ({:.1}%)", label, correct, total, pct);
+    }
+}
+
+pub fn k_value_benchmark() {
+    for k in 1..21 {
+        let (_, _, accuracy, _, _) = run_parallel_benchmark(k);
+        println!("Accuracy: {} for k={}", accuracy, k)
     }
 }
 
