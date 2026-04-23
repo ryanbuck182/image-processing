@@ -1,18 +1,16 @@
-# ADD REFERENCES BEFORE SUBMITTING!!!!!!!!!!!!!!
-# ALSO ADD FILE TREE DIAGRAMS IN INSTRUCTIONS.MD
-
-# Image Classification in Rust
+# Image Classification  with k-Nearest Neighbor and MNIST Handwritten Digits
 
 ## 1. Project Title & Authors
 
-**Image Classification in Rust** by Sean McMurray and Ryan Buck.
+**Image Classification  with k-Nearest Neighbor and MNIST Handwritten Digits**
+by Sean McMurray and Ryan Buck.
 
 ## 2. Project Description
 
 This project uses the k-Nearest Neighbors algorithm to classify images from the MNIST Handwritten Digits (28x28 grayscale) dataset.
 The project runs in sequence and in parallel and measures the execution time, speedup, efficiency, classification accuracy, and throughput for each mode.
 The project has two modes for running in parallel: using Rayon and using built-in thread pools. Each mode will be tested.
-The project will also repeat on a second device with different hardware, measuring the same metrics.
+The project will also be repeated on a second device with different hardware, measuring the same metrics.
 
 ## 3. Prerequisites
 
@@ -28,7 +26,7 @@ This project will likely run well on any modern device. At a minimum, you should
 | Component | Requirement |
 |-----------|-------------|
 | **OS** | Windows 10, macOS 10.15, or Linux (kernel 4.15) |
-| **CPU** | x86-64, 2 cores |
+| **CPU** | Any mainstream architecture, 2 cores |
 | **RAM** | 512 MB |
 | **Disk** | 400 MB |
 
@@ -52,3 +50,5 @@ The dependencies in [`Cargo.toml`](./Cargo.toml) should be automatically install
 
 Geeks for Geeks: k-Nearest Neighbors (KNN) Algorithm
 https://www.geeksforgeeks.org/machine-learning/k-nearest-neighbours/
+
+Rust Documentation: MNIST Crate https://docs.rs/mnist/latest/mnist/
