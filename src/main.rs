@@ -41,34 +41,45 @@ fn main() {
 fn full_test(k: usize) {
     let (train_images, test_images) = load_dataset();
 
-    // let start_time_sequential = Instant::now();
-    // let predicted_labels_sequential = predict_image_categories(k, &test_images, &train_images);
-    // let duration_sequential = start_time_sequential.elapsed();
+    let start_time_sequential = Instant::now();
+    let predicted_labels_sequential = predict_image_categories(k, &test_images, &train_images);
+    let duration_sequential = start_time_sequential.elapsed();
 
-    // let start_time_parallel = Instant::now();
-    // let predicted_labels_parallel = predict_image_categories_parallel(k, &test_images, &train_images);
-    // let duration_parallel = start_time_parallel.elapsed();
+    let start_time_parallel = Instant::now();
+    let predicted_labels_parallel = predict_image_categories_parallel(k, &test_images, &train_images);
+    let duration_parallel = start_time_parallel.elapsed();
 
     let start_time_parallel_2 = Instant::now();
     let predicted_labels_parallel_2 = predict_image_categories_parallel_2(k, &test_images, &train_images);
     let duration_parallel_2= start_time_parallel_2.elapsed();
-    // let speedup = duration_sequential.as_secs_f64() / duration_parallel.as_secs_f64();   
-    // let efficiency = speedup as f64 / num_cpus::get() as f64;
-    // let sequential_throughput = test_images.len() as f64 / duration_sequential.as_secs_f64();
-    // let parallel_throughput = test_images.len() as f64 / duration_parallel.as_secs_f64();
 
-    // let ( accurate_predictions_sequential, accuracy_sequential ) = shared::calculate_accuracy(&predicted_labels_sequential, &test_images);
-    // let ( accurate_predictions_parallel, accuracy_parallel ) = shared::calculate_accuracy(&predicted_labels_parallel, &test_images);
-    // let ( accurate_predictions_parallel_2, accuracy_parallel_2 ) = shared::calculate_accuracy(&predicted_labels_parallel_2, &test_images);
-    // println!("Accurate Predictions Sequential: {}/{}", accurate_predictions_sequential, test_images.len());
-    // println!("Accurate Predictions Parallel: {}/{}", accurate_predictions_parallel, test_images.len());
-    // println!("Accuracy Sequential: {}", accuracy_sequential);
-    // println!("Accuracy Parallel: {}", accuracy_parallel);
-    // println!("Time Sequential: {:?}", duration_sequential);
-    println!("Time Parallel: {:?}", duration_parallel_2);
+    let speedup = duration_sequential.as_secs_f64() / duration_parallel.as_secs_f64();   
+    let efficiency = speedup as f64 / num_cpus::get() as f64;
+    let speedup_2 = duration_sequential.as_secs_f64() / duration_parallel_2.as_secs_f64();
+    let efficiency_2 = speedup_2 as f64 / num_cpus::get() as f64;
+    let sequential_throughput = test_images.len() as f64 / duration_sequential.as_secs_f64();
+    let parallel_throughput = test_images.len() as f64 / duration_parallel.as_secs_f64();
+    let parallel_2_throughput = test_images.len() as f64 / duration_parallel_2.as_secs_f64();
 
-    // println!("Speedup: {:.2}", speedup);
-    // println!("Efficiency: {:.2}", efficiency);
-    // println!("Sequential Throughput: {:.2} images/sec", sequential_throughput);
-    // println!("Parallel Throughput: {:.2} images/sec", parallel_throughput);
+    let ( accurate_predictions_sequential, accuracy_sequential ) = shared::calculate_accuracy(&predicted_labels_sequential, &test_images);
+    let ( accurate_predictions_parallel, accuracy_parallel ) = shared::calculate_accuracy(&predicted_labels_parallel, &test_images);
+    let ( accurate_predictions_parallel_2, accuracy_parallel_2 ) = shared::calculate_accuracy(&predicted_labels_parallel_2, &test_images);
+    println!("Accurate Predictions Sequential: {}/{}", accurate_predictions_sequential, test_images.len());
+    println!("Accurate Predictions Parallel: {}/{}", accurate_predictions_parallel, test_images.len());
+    println!("Accurate Predictions Parallel_2: {}/{}", accurate_predictions_parallel_2, test_images.len());
+    println!("Accuracy Sequential: {}", accuracy_sequential);
+    println!("Accuracy Parallel: {}", accuracy_parallel);
+    println!("Accuracy Parallel_2: {}", accuracy_parallel_2);
+    println!("Time Sequential: {:?}", duration_sequential);
+    println!("Time Parallel: {:?}", duration_parallel);
+    println!("Time Parallel_2: {:?}", duration_parallel_2);
+
+    println!("Speedup: {:.2}", speedup);
+    println!("Efficiency: {:.2}", efficiency);
+    println!("Speedup Parallel_2: {:.2}", speedup_2);
+    println!("Efficiency Parallel_2: {:.2}", efficiency_2);
+    println!("Sequential Throughput: {:.2} images/sec", sequential_throughput);
+    println!("Parallel Throughput: {:.2} images/sec", parallel_throughput);
+    println!("Parallel_2 Throughput: {:.2} images/sec", parallel_2_throughput);
+
 }

@@ -1,5 +1,5 @@
 use priority_queue::PriorityQueue;
-use crate::shared::{Image, calculate_distance_between_images, predict_image_category};
+use crate::shared::{Image, calculate_distance_between_images};
 use threadpool::ThreadPool;
 use num_cpus;
 use std::sync::{mpsc::channel, Arc};
