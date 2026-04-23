@@ -41,22 +41,22 @@ pub fn full_benchmark(k: usize) {
     println!("Accuracy: {}", accuracy);
 
     println!("Time Sequential: {:?}", duration_sequential);
-    println!("Time Parallel: {:?}", duration_parallel);
-    println!("Time Parallel_2: {:?}", duration_parallel_2);
+    println!("Time Parallel (Rayon): {:?}", duration_parallel);
+    println!("Time Parallel (Threadpool): {:?}", duration_parallel_2);
 
-    println!("Speedup: {:.2}", speedup);
-    println!("Efficiency: {:.2}", efficiency);
+    println!("Speedup with Rayon: {:.2}", speedup);
+    println!("Efficiency with Rayon: {:.2}", efficiency);
 
-    println!("Speedup Parallel_2: {:.2}", speedup_2);
-    println!("Efficiency Parallel_2: {:.2}", efficiency_2);
+    println!("Speedup with Threadpool: {:.2}", speedup_2);
+    println!("Efficiency with Threadpool: {:.2}", efficiency_2);
 
     println!(
         "Sequential Throughput: {:.2} images/sec",
         sequential_throughput
     );
-    println!("Parallel Throughput: {:.2} images/sec", parallel_throughput);
+    println!("Rayon Throughput: {:.2} images/sec", parallel_throughput);
     println!(
-        "Parallel_2 Throughput: {:.2} images/sec",
+        "Threadpool Throughput: {:.2} images/sec",
         parallel_2_throughput
     );
 
@@ -91,7 +91,7 @@ pub fn parallel_benchmark(k: usize) {
     let (duration, accurate_predictions, accuracy, correct_counts, total_counts) =
         run_parallel_benchmark(k);
 
-    println!("Parallel 1");
+    println!("Parallel with Rayon");
     println!(
         "Accurate Predictions: {}/{}",
         accurate_predictions, NUM_TEST_IMAGES
@@ -105,7 +105,7 @@ pub fn parallel_2_benchmark(k: usize) {
     let (duration, accurate_predictions, accuracy, correct_counts, total_counts) =
         run_parallel_2_benchmark(k);
 
-    println!("Parallel 2");
+    println!("Parallel with Threadpool");
     println!(
         "Accurate Predictions: {}/{}",
         accurate_predictions, NUM_TEST_IMAGES
