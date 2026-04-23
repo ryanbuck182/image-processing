@@ -6,21 +6,40 @@ use std::sync::{mpsc::channel, Arc};
 
 pub fn predict_image_categories_parallel_2(k: usize, images: &Vec<Image>, train_images: &Vec<Image>) -> Vec<u8> {
     let mut predicted_labels = Vec::with_capacity(images.len());
+    let n_workers = num_cpus::get();
+    let pool = ThreadPool::new(n_workers);
     for (i, image) in images.iter().enumerate() {
-        let predicted_label = predict_image_category(k, &image, &train_images, find_closest_images_parallel_2);
+        let predicted_label = predict_image_category_parallel_2(k, &image, &train_images, &pool);
         predicted_labels.push(predicted_label);
         println!("Image {} - Predicted: {}, Actual: {}", i, predicted_label, image.label);
     }
     predicted_labels
 }
 
-fn find_closest_images_parallel_2(k: usize, image: &Image, train_images: &Vec<Image>) -> Vec<u8> {
+fn predict_image_category_parallel_2(k: usize, image: &Image, train_images: &Vec<Image>, pool: &ThreadPool) -> u8 {
+    let closest_labels = find_closest_images_parallel_2(k, image, &train_images, pool);
+
+    let mut label_counts = [0; 10];
+    for label in closest_labels {
+        label_counts[label as usize] += 1;
+    }
+
+    let mut predicted_label = 0;
+    for (label, count) in label_counts.iter().enumerate() {
+        if *count > label_counts[predicted_label as usize] {
+            predicted_label = label as u8;
+        }
+    }
+    predicted_label
+}
+
+fn find_closest_images_parallel_2(k: usize, image: &Image, train_images: &Vec<Image>, pool: &ThreadPool) -> Vec<u8> {
     let mut pq = PriorityQueue::with_capacity(k as usize);
 
     let n_workers = num_cpus::get();
     let chunk_size = (train_images.len() + n_workers - 1) / n_workers;
 
-    let pool = ThreadPool::new(n_workers);
+    
     let image = Arc::new(image.clone());
 
     let (tx, rx) = channel();
