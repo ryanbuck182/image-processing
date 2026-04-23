@@ -1,6 +1,8 @@
 use image_processing::benchmark::{
     full_benchmark, parallel_2_benchmark, parallel_benchmark, sequential_benchmark,
 };
+use std::io::{self, Write};
+
 const K_VALUE: usize = 3;
 
 fn main() {
@@ -15,12 +17,8 @@ fn benchmark_menu() {
         println!("3. Run parallel benchmark (rayon)");
         println!("4. Run parallel benchmark (threadpool)");
         println!("5. Exit");
-        println!("Enter your choice: ");
-        let mut choice = String::new();
-        std::io::stdin()
-            .read_line(&mut choice)
-            .expect("Failed to read input");
-        let choice = choice.trim().parse::<u32>().expect("Invalid input");
+        let choice = input_int("Enter your choice:", 1, 5);
+
         match choice {
             1 => {
                 full_benchmark(K_VALUE);
@@ -38,4 +36,44 @@ fn benchmark_menu() {
             _ => println!("Invalid choice"),
         }
     }
+
+    println!("Exiting...")
+}
+
+fn input_int(prompt: &str, min: i32, max: i32) -> i32 {
+    let input = take_input(prompt);
+    
+    // Parse input
+    let num: Result<i32, _> = input.parse();
+
+    // Return int or try again
+    match num {
+        Ok(n) => {
+            if n >= min && n <= max {
+                n
+            } else {
+                println!("Invalid input! Please enter an integer between {} and {}.", min, max);
+                input_int(prompt, min, max)
+            }
+        }
+        Err(_) => {
+            println!("Invalid input! Please enter an integer.");
+            input_int(prompt, min, max)
+        }
+    }
+}
+
+fn take_input(prompt: &str) -> String {
+    // Prompt the user
+    print!("{} ", prompt);
+    io::stdout().flush().expect("Unable to print prompt.");
+
+    // Take input
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read input");
+
+    // Trim and return
+    input.trim().to_string()
 }
