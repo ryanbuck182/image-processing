@@ -1,12 +1,7 @@
-mod shared;
-mod sequential;
-mod parallel_1;
-mod parallel_2;
-
-use shared::{load_dataset};
-use sequential::{predict_image_categories};
-use parallel_1::{predict_image_categories_parallel};
-use parallel_2::{predict_image_categories_parallel_2};
+use image_processing::shared::{self, load_dataset};
+use image_processing::sequential::predict_image_categories;
+use image_processing::parallel_1::predict_image_categories_parallel;
+use image_processing::parallel_2::predict_image_categories_parallel_2;
 use std::time::Instant;
 use num_cpus;
 
