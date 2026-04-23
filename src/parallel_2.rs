@@ -51,13 +51,13 @@ fn find_closest_images_parallel_2(k: usize, image: &Image, train_images: &Vec<Im
         let chunk = chunk.to_vec();
         
         pool.execute(move || {
-            let mut loacl_results = Vec::with_capacity(chunk.len());
+            let mut local_results = Vec::with_capacity(chunk.len());
 
             for (i,training_image) in chunk.iter().enumerate() {
                 let distance = calculate_distance_between_images(&image_ref, training_image);
-                loacl_results.push((start_idx + i, distance));
+                local_results.push((start_idx + i, distance));
             }
-            tx.send(loacl_results).unwrap();
+            tx.send(local_results).unwrap();
         });
     }
     
