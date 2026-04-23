@@ -13,22 +13,6 @@ pub fn predict_image_categories_parallel(k: usize, images: &Vec<Image>, train_im
         println!("Image {} - Predicted: {}, Actual: {}", i, predicted_label, image.label);
         accuracy_per_image.push((image.label, predicted_label));
     }
-
-    let mut correct_counts = [0u32; 10];
-    let mut total_counts = [0u32; 10];
-    for (actual, predicted) in &accuracy_per_image {
-        total_counts[*actual as usize] += 1;
-        if actual == predicted {
-            correct_counts[*actual as usize] += 1;
-        }
-    }
-    println!("\nAccuracy per label:");
-    for label in 0..10 {
-        let total = total_counts[label];
-        let correct = correct_counts[label];
-        let pct = if total > 0 { correct as f64 / total as f64 * 100.0 } else { 0.0 };
-        println!("  Label {}: {}/{} ({:.1}%)", label, correct, total, pct);
-    }
     
     predicted_labels
 }
